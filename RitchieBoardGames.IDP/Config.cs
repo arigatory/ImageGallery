@@ -20,12 +20,16 @@ public static class Config
         new Client[]
             {
                 new Client(){ 
-                    ClientName = "Image Callery",
+                    ClientName = "Image Gallery",
                     ClientId = "imagegalleryclient",
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris =
                     {
-                        "http://localhost:7184/signin-oidc"
+                        "https://localhost:7184/signin-oidc"
+                    },
+                    PostLogoutRedirectUris =
+                    {
+                        "https://localhost:7184/signout-callback-oidc"
                     },
                     AllowedScopes = {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -34,7 +38,8 @@ public static class Config
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())
-                    }
+                    },
+                    RequireConsent = true,
                 }
 
             };
