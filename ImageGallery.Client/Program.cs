@@ -25,7 +25,10 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.AccessDeniedPath = "/Authentication/AccessDenied";
+})
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -45,6 +48,13 @@ builder.Services.AddAuthentication(options =>
         options.ClaimActions.Remove("aud");
         options.ClaimActions.DeleteClaim("sid");
         options.ClaimActions.DeleteClaim("idp");
+        options.Scope.Add("roles");
+        options.ClaimActions.MapJsonKey("role", "role");
+        options.TokenValidationParameters = new()
+        {
+            NameClaimType = "given_name",
+            RoleClaimType = "role"
+        };
     });
 
 var app = builder.Build();
